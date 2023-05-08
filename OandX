@@ -1,0 +1,99 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("---------");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("|       |");
+        }
+        System.out.println("---------");
+
+        char[][] field = new char[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                field[i][j] = ' ';
+            }
+        }
+        char player;
+
+        for (int k = 0;k < 50; k++) {
+
+            String usrIn = sc.nextLine();
+            char[] userCoord = usrIn.toCharArray();
+            int coordX = Character.getNumericValue(userCoord[0]);
+            int coordY = Character.getNumericValue(userCoord[2]);
+            boolean notNumber = userCoord.length > 3;
+            boolean numTooBig = coordX > 3 || coordY > 3;
+            Boolean xxx = false;
+            Boolean ooo = false;
+
+            if (notNumber) {
+                System.out.println("You should enter numbers!");
+            } else if (numTooBig) {
+                System.out.println("Coordinates should be from 1 to 3!");
+            } else if (!notNumber && !numTooBig) {
+                boolean placeTaken = field[coordX - 1][coordY - 1] != ' ';
+                int x = 0;
+                int o = 0;
+                for (int i = 0; i < field.length; i++) {
+                    for (int j = 0; j < field[i].length; j++) {
+                        if ('X' == field[i][j]) {
+                            x++;
+                        } else if ('O' == field[i][j]) {
+                            o++;
+                        }
+                    }
+                }
+                if (placeTaken) {
+                    System.out.println("This cell is occupied! Choose another one!");
+                } else if (x - o == 0) {
+                    player = 'X';
+
+                    field[coordX - 1][coordY - 1] = player;
+
+                    System.out.println("---------");
+                    for (int i = 0; i < 3; i++) {
+                        System.out.println(String.format("| %c %c %c |", field[i][0], field[i][1], field[i][2]));
+                    }
+                    System.out.println("---------");
+                } else if (x - o == 1) {
+                    player = 'O';
+                    field[coordX - 1][coordY - 1] = player;
+
+                    System.out.println("---------");
+                    for (int i = 0; i < 3; i++) {
+                        System.out.println(String.format("| %c %c %c |", field[i][0], field[i][1], field[i][2]));
+                    }
+                    System.out.println("---------");
+                }
+                for (int i = 0; i < 3; i++) {
+                    int row = 0;
+                    int clm = 0;
+                    int mDiag = 0;
+                    int aDiag = 0;
+
+                    for (int j = 0; j < 3; j++) {
+                        row += field[i][j];
+                        clm += field[j][i];
+                        mDiag += field[j][j];
+                        aDiag += field[j][2 - j];
+                    }
+                    xxx = xxx || row == 264 || clm == 264 || mDiag == 264 || aDiag == 264;
+                    ooo = ooo || row == 237 || clm == 237 || mDiag == 237 || aDiag == 237;
+                }
+
+                if (xxx) {
+                    System.out.println("X wins");
+                    break;
+                } else if (ooo) {
+                    System.out.println("O wins");
+                    break;
+                } else if (x + o == 9) {
+                    System.out.println("Draw");
+                    break;
+                }
+            }
+        }
+    }
+}
